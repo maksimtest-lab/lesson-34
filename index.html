@@ -5,118 +5,116 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Lesson 34 - Работа с сервером - часть 2 - Axios</title>
 
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <style>
+            body {
+                padding: 25px;
+                background: #f0f4f8;
+            }
+
+            h1, h2 {
+                color: #333;
+            }
+
+            form, .filter, .pagination {
+                margin-bottom: 20px;
+            }
+
+            input, button {
+                padding: 6px 10px;
+                margin: 5px;
+                font-size: 14px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+            }
+
+            input:focus {
+                outline: none;
+                border-color: #007bff;
+            }
+
+            button {
+                cursor: pointer;
+                color: #fff;
+            }
+
+            button#createBtn {
+                background-color: #28a745;
+            }
+
+            button#filterBtn {
+                background-color: #007bff;
+            }
+
+            button#searchBtn {
+                background-color: #17a2b8;
+            }
+
+            button#clearBtn {
+                background-color: #6c757d;
+            }
+
+            button.pagination-btn {
+                background-color: #ffc107;
+            }
+
+            button.delete-btn {
+                background-color: #dc3545;
+            }
+
+            button.edit-btn {
+                background-color: #20c997;
+            }
+
+            .post {
+                background: #fff;
+                border: 1px solid #ccc;
+                padding: 12px;
+                margin-bottom: 10px;
+                border-radius: 6px;
+            }
+
+            .post h3 {
+                margin: 0 0 8px;
+            }
+
+            .post p {
+                margin: 0 0 8px;
+            }
+
+            #postsList {
+                margin-top: 25px;
+            }
+        </style>
     </head>
     <body>
         <h1>Lesson 34 - Работа с сервером - часть 2 - Axios</h1>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <style>
-        body {
-            padding: 25px;
-            background: #f0f4f8;
-        }
+        <h2>Посты</h2>
 
-        h1, h2 {
-            color: #333;
-        }
+        <h3>Создать пост</h3>
+        <form id="createForm">
+            <input type="text" id="title" placeholder="Загловок" required />
+            <input type="text" id="body" placeholder="Описание" required />
+            <input type="number" id="userId" placeholder="User ID" required />
+            <button id="createBtn">Создать</button>
+        </form>
 
-        form, .filter, .pagination {
-            margin-bottom: 20px;
-        }
+        <div class="filters">
+            <input type="number" id="filterUserId" placeholder="Фильтр по User ID" />
+            <button id="filterBtn">Фильтровать</button>
+            <input type="text" id="searchInput" placeholder="Поиск по title/body" />
+            <button id="searchBtn">Найти</button>
+            <button id="clearBtn">Сбросить фильтры</button>
+        </div>
 
-        input, button {
-            padding: 6px 10px;
-            margin: 5px;
-            font-size: 14px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-        }
+        <div id="postsList"></div>
 
-        input:focus {
-            outline: none;
-            border-color: #007bff;
-        }
-
-        button {
-            cursor: pointer;
-            color: #fff;
-        }
-
-        button#createBtn {
-            background-color: #28a745;
-        }
-
-        button#filterBtn {
-            background-color: #007bff;
-        }
-
-        button#searchBtn {
-            background-color: #17a2b8;
-        }
-
-        button#clearBtn {
-            background-color: #6c757d;
-        }
-
-        button.pagination-btn {
-            background-color: #ffc107;
-        }
-
-        button.delete-btn {
-            background-color: #dc3545;
-        }
-
-        button.edit-btn {
-            background-color: #20c997;
-        }
-
-        .post {
-            background: #fff;
-            border: 1px solid #ccc;
-            padding: 12px;
-            margin-bottom: 10px;
-            border-radius: 6px;
-        }
-
-        .post h3 {
-            margin: 0 0 8px;
-        }
-
-        .post p {
-            margin: 0 0 8px;
-        }
-
-        #postsList {
-            margin-top: 25px;
-        }
-    </style>
-</head>
-<body>
-    <h1>Посты</h1>
-
-    <h2>Создать пост</h2>
-    <form id="createForm">
-        <input type="text" id="title" placeholder="Загловок" required />
-        <input type="text" id="body" placeholder="Описание" required />
-        <input type="number" id="userId" placeholder="User ID" required />
-        <button id="createBtn">Создать</button>
-    </form>
-
-    <div class="filters">
-        <input type="number" id="filterUserId" placeholder="Фильтр по User ID" />
-        <button id="filterBtn">Фильтровать</button>
-        <input type="text" id="searchInput" placeholder="Поиск по title/body" />
-        <button id="searchBtn">Найти</button>
-        <button id="clearBtn">Сбросить фильтры</button>
-    </div>
-
-    <div id="postsList"></div>
-
-    <div>
-        <button class="pagination-btn" id="prevPage">Предыдущая</button>
-        <button class="pagination-btn" id="nextPage">Следующая</button>
-    </div>
-    
-    <script src="./index.js"></script>
+        <div>
+            <button class="pagination-btn" id="prevPage">Предыдущая</button>
+            <button class="pagination-btn" id="nextPage">Следующая</button>
+        </div>
+        
+        <script src="./index.js"></script>
 
     </body>
 </html>
