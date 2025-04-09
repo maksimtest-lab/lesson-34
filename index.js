@@ -15,6 +15,73 @@ const filterBtn = document.getElementById('filterBtn');
 const searchBtn = document.getElementById('searchBtn');
 const clearBtn = document.getElementById('clearBtn');
 
+const createForm = document.getElementById('createForm');
+
+createForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const title = document.getElementById('title').value;
+    const body = document.getElementById('body').value;
+    const userId = document.getElementById('userId').value;
+
+    axios.post('/posts', {
+        title,
+        body,
+        userId,
+    }).then((request) => {
+        console.log(request);
+        // renderPosts();
+        renderPost(request.data);
+    });
+})
+
+function renderPost(post) {
+    const div = document.createElement('div');
+    div.className = "post"
+    div.id = `post_${post.id}`;
+
+    const titleElement = document.createElement('h3');
+    titleElement.textContent = post.title;
+
+    const bodyElement = document.createElement('p');
+    bodyElement.textContent = post.body;
+
+    const editBtn = document.createElement('button');
+    editBtn.className = 'edit-btn';
+    editBtn.textContent = 'Изменить';
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'delete-btn';
+    deleteBtn.textContent = 'Удалить';
+
+    editBtn.addEventListener('click', () => {
+        const title = prompt('Введите новый заголовок', post.title);
+        const body = prompt('Введите новый текст', post.body);
+
+        axios.put(`/posts/${post.id}`, {
+            title,
+            body,
+        }).then(() => {
+            // renderPosts();
+            titleElement.textContent = title;
+            bodyElement.textContent = body;
+        })
+    })
+
+    deleteBtn.addEventListener('click', () => {
+        axios.delete(`/posts/${post.id}`).then(() => {
+            // renderPosts();
+            document.getElementById(`post_${post.id}`).remove();
+        })
+    })
+
+    div.appendChild(titleElement);
+    div.appendChild(bodyElement);
+    div.appendChild(editBtn);
+    div.appendChild(deleteBtn);
+    postsList.appendChild(div);
+}
+
 function renderPosts() {
     postsList.innerHTML = '';
 
@@ -25,28 +92,7 @@ function renderPosts() {
     }
 
     allPosts.forEach(post => {
-        const div = document.createElement('div');
-        div.className = "post"
-
-        const titleElement = document.createElement('h3');
-        titleElement.textContent = post.title;
-
-        const bodyElement = document.createElement('p');
-        bodyElement.textContent = post.body;
-
-        const editBtn = document.createElement('button');
-        editBtn.className = 'edit-btn';
-        editBtn.textContent = 'Изменить';
-
-        const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'delete-btn';
-        deleteBtn.textContent = 'Удалить';
-
-        div.appendChild(titleElement);
-        div.appendChild(bodyElement);
-        div.appendChild(editBtn);
-        div.appendChild(deleteBtn);
-        postsList.appendChild(div);
+        renderPost(post);
     })
 }
 
