@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 34 - Homework from InnoDOM - Task 5</title>
+    <link rel="stylesheet" href="./styles.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,200..800;1,200..800&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+            body {
+                padding: 25px;
+                background: #f0f4f8;
+            }
+
+            h1, h2 {
+                color: #333;
+            }
+
+            form, .filter, .pagination {
+                margin-bottom: 20px;
+            }
+
+            input, button {
+                padding: 6px 10px;
+                margin: 5px;
+                font-size: 14px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+            }
+
+            input:focus {
+                outline: none;
+                border-color: #007bff;
+            }
+
+            button {
+                cursor: pointer;
+                color: #fff;
+                margin: 0;
+                border: solid 1px;
+
+                &:hover {
+                    opacity: 0.8;
+                }
+            }
+
+            button#createBtn {
+                background-color: #28a745;
+            }
+
+            button#filterBtn {
+                background-color: #007bff;
+            }
+
+            button#searchBtn {
+                background-color: #17a2b8;
+            }
+
+            button#clearBtn {
+                background-color: #6c757d;
+            }
+
+            button.pagination-btn {
+                background-color: #ffc107;
+            }
+
+            button.delete-btn {
+                background-color: #dc3545;
+            }
+
+            button.edit-btn {
+                background-color: #20c997;
+            }
+
+            .post {
+                background: #fff;
+                border: 1px solid #ccc;
+                padding: 12px;
+                margin-bottom: 10px;
+                border-radius: 6px;
+            }
+
+            .post h3 {
+                margin: 0 0 8px;
+            }
+
+            .post p {
+                margin: 0 0 8px;
+            }
+
+            #bookList {
+                margin-top: 25px;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px 30px;
+
+            }
+
+            .book {
+                background: #fff;
+                border: 1px solid #ccc;
+                padding: 12px;
+                margin-bottom: 10px;
+                border-radius: 6px;
+                width: 300px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+
+                img {
+                    max-width: 100%;
+                }
+
+            }
+
+            .book-title {
+                font-weight: bold;
+                font-size: 18px;
+            }
+
+            .book-image {
+                margin-bottom: 20px;
+            }
+
+            .book-details {
+                font-size: 14px;
+                list-style: none;
+                margin: 0 0 10px;
+                padding: 0;
+
+                li {
+                    padding: 0;
+                }
+            }
+
+            .book-footer {
+                margin-top: auto;
+                display: flex;
+                gap: 10px;
+            }
+
+            .form-group {
+                margin-bottom: 10px;
+                color: green;
+            }
+        </style>
+</head>
+<body>
+    <h1>Задание 5. Основные операции с сервером</h1>
+
+    <ol>
+        <li>
+            Поиск и фильтрация:
+            <ul>
+                <li>
+                    добавьте в REST API возможность поиска книг по названию или автору.
+                </li>
+                <li>
+                    реализуйте фильтрацию книг по жанру или году издания.
+                </li>
+            </ul>
+        </li>
+        <li>
+            Сортировка:
+            <ul>
+                <li>
+                    расширьте свое API возможностью сортировки книг по разным критериям, например, по названию или году издания.
+                </li>
+            </ul>
+        </li>
+        <li>
+            Пагинация:
+            <ul>
+                <li>
+                    в своём API добавьте пагинацию, чтобы можно было получать книги порциями, например, по 10 штук на странице.
+                </li>
+                <li>
+                    реализуйте параметры запроса, позволяющие указывать номер страницы и количество элементов на странице.
+                </li>
+            </ul>
+        </li>
+        <li>
+            Объединение операций:
+            <ul>
+                <li>
+                    сочетайте операции поиска, фильтрации, сортировки и пагинации в одном запросе для получения более точных результатов.
+                </li>
+            </ul>
+        </li>
+    </ol>
+
+    <p>Использовал фейковый API: <a href="https://www.freetestapi.com/apis/books" target="_blank">https://www.freetestapi.com/apis/books</a></p>
+
+    <h2>Книги</h2>
+
+    <h3>Создать запись в библиотеку</h3>
+    <form id="createForm">
+        <div class="form-group">
+            <label for="title">Загловок</label>
+            <input type="text" id="title" placeholder="Загловок" required />
+        </div>
+
+        <div class="form-group">
+            <label for="description">Описание</label>
+            <input type="text" id="description" placeholder="Описание" required />
+        </div>
+
+        <div class="form-group">
+            <label for="author">Автор книги</label>
+            <input type="text" id="author" placeholder="Автор" required />
+        </div>
+
+        <div class="form-group">
+            <label for="publication_year">Год публикации книги</label>
+            <input type="text" id="publication_year" placeholder="Год" required />
+        </div>
+
+        <div class="form-group">
+            <label for="genre">Жанр книги</label>
+            <input type="text" id="genre" placeholder="Жанр" required />
+        </div>
+
+        <div class="form-group">
+            <label for="cover_image">Обложка</label>
+            <input type="text" id="cover_image" placeholder="Обложка" value="https://fakeimg.pl/667x1000/b7c0f1" required />
+        </div>
+
+        <button id="createBtn" type="submit">Создать</button>
+    </form>
+
+    <h3>Фильтр</h3>
+    <div class="filters">
+        <div class="form-group">
+            <label for="searchInput">Поиск</label>
+            <input type="text" id="searchInput" placeholder="Поиска книг по названию или автору" />
+            <select name="genres" id="genres"><option value="">Выберите жанр...</option></select>
+            <select name="years" id="years"><option value="">Выберите год...</option></select>
+        </div>
+        <div class="form-group">
+            <label for="sort">Сортировка</label>
+            <select name="sort" id="sort">
+                <option value="">Сортировать по...</option>
+                <option value="title">По названию</option>
+                <option value="year">По году</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="booksPerPage">Количество элементов</label>
+            <input type="number" id="booksPerPage" value="5" />
+        </div>
+        <div class="form-group">
+            <label for="pagesList">Выбрать страницу</label>
+            <select name="pagesList" id="pagesList"></select>
+        </div>
+        <button id="searchBtn">Фильтровать</button>
+        <button id="clearBtn">Сбросить фильтры</button>
+    </div>
+
+    <h3>Список книг</h3>
+    <div id="bookList"></div>
+
+    <div>
+        <button class="pagination-btn" id="prevPage">Предыдущая</button>
+        <button class="pagination-btn" id="nextPage">Следующая</button>
+    </div>
+
+    <script src="./task5.js"></script>
+
+</body>
+</html>
