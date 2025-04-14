@@ -6,6 +6,7 @@ const searchInput = document.getElementById('searchInput');
 const genresList = document.getElementById('genres');
 const yearsList = document.getElementById('years');
 const pagesList = document.getElementById('pagesList');
+const sortList = document.getElementById('sortList');
 const booksPerPage = document.getElementById('booksPerPage');
 const bookList = document.getElementById('bookList');
 
@@ -24,6 +25,10 @@ pagesList.onchange = () => {
 }
 
 booksPerPage.onchange = () => {
+    loadBooks();
+}
+
+sortList.onchange = () => {
     loadBooks();
 }
 
@@ -218,6 +223,17 @@ function prepareBooks(books) {
         }
         return book;
     });
+
+    if(sortList.value) {
+        books.sort((a, b) => {
+            if (sortList.value == 'title') {
+                return a.title.localeCompare(b.title);
+            }
+            if (sortList.value == 'year') {
+                return a.publication_year - b.publication_year;
+            }
+        })
+    }
 
     return books.slice(begin, end);
 
