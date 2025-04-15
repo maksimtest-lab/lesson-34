@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 34 - Homework from InnoDOM - Task 6</title>
+    <link rel="stylesheet" href="./styles.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,200..800;1,200..800&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+            body {
+                padding: 25px;
+                background: #f0f4f8;
+            }
+
+            h1, h2 {
+                color: #333;
+            }
+
+            form, .filter, .pagination {
+                margin-bottom: 20px;
+            }
+
+            input, button {
+                padding: 6px 10px;
+                margin: 5px;
+                font-size: 14px;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+            }
+
+            input:focus {
+                outline: none;
+                border-color: #007bff;
+            }
+
+            button {
+                cursor: pointer;
+                color: #fff;
+                margin: 0;
+                border: solid 1px;
+
+                &:hover {
+                    opacity: 0.8;
+                }
+            }
+
+            button#createBtn {
+                background-color: #28a745;
+            }
+
+            button#filterBtn {
+                background-color: #007bff;
+            }
+
+            button#searchBtn {
+                background-color: #17a2b8;
+            }
+
+            button#clearBtn {
+                background-color: #6c757d;
+            }
+
+            button.pagination-btn {
+                background-color: #ffc107;
+            }
+
+            button.delete-btn {
+                background-color: #dc3545;
+            }
+
+            button.edit-btn {
+                background-color: #20c997;
+            }
+
+            .todo {
+                background: #fff;
+                border: 1px solid #ccc;
+                padding: 12px;
+                margin-bottom: 10px;
+                border-radius: 6px;
+            }
+
+            .todo h3 {
+                margin: 0 0 8px;
+            }
+
+            .todo p {
+                margin: 0 0 8px;
+            }
+
+            #todoList {
+                margin-top: 25px;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px 30px;
+
+            }
+
+            .todo {
+                background: #fff;
+                border: 1px solid #ccc;
+                padding: 12px;
+                margin-bottom: 10px;
+                border-radius: 6px;
+                width: 300px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+
+                img {
+                    max-width: 100%;
+                }
+
+            }
+
+            .todo-title {
+                font-weight: bold;
+                font-size: 18px;
+            }
+
+            .todo-image {
+                margin-bottom: 20px;
+            }
+
+            .todo-details {
+                font-size: 14px;
+                list-style: none;
+                margin: 0 0 10px;
+                padding: 0;
+
+                li {
+                    padding: 0;
+                }
+            }
+
+            .todo-footer {
+                margin-top: auto;
+                display: flex;
+                gap: 10px;
+            }
+
+            .form-group {
+                margin-bottom: 10px;
+                color: green;
+            }
+        </style>
+</head>
+<body>
+    <h1>Задание 6. Практический проект</h1>
+
+     <p>
+        Создайте полноценное REST API для управления задачами или другими ресурсами, реализовав операции поиска, фильтрации, сортировки и пагинации. Используйте Swagger для документирования API.
+    </p>
+
+
+    <p>Составлял для <a href="https://dummyjson.com/" title="DummyJSON" target="_blank">DummyJSON</a>. Выходной файл <a href="./task6.yaml">Swagger Specification </a>. Тестировал по этой <a href="https://editor.swagger.io/" title="Swagger Editor" target="_blank">ссылке</a>.</p>
+
+    <h2>Задачи</h2>
+
+    <h3>Создать задачу</h3>
+    <form id="createForm">
+
+        <div class="form-group">
+            <label for="todo">Задача</label>
+            <input type="text" id="todo" placeholder="Задача" required />
+        </div>
+
+        <button id="createBtn" type="submit">Создать</button>
+    </form>
+
+    <h3>Фильтр</h3>
+    <div class="filters">
+        <div class="form-group">
+            <label for="searchInput">Поиск</label>
+            <input type="text" id="searchInput" placeholder="Текст содержит..." />
+        </div>
+        <div class="form-group">
+            <label for="sortList">Сортировка</label>
+            <select name="sortList" id="sortList">
+                <option value="">Сортировать по...</option>
+                <option value="title">По названию</option>
+                <option value="completed">По выполнению</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="completedList">Статус выполнения</label>
+            <select name="completedList" id="completedList">
+                <option value="">Все</option>
+                <option value="true">Выполнено</option>
+                <option value="false">Ждет выполнения</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="todosPerPage">Количество элементов</label>
+            <input type="number" id="todosPerPage" value="5" />
+        </div>
+        <div class="form-group">
+            <label for="pagesList">Выбрать страницу</label>
+            <select name="pagesList" id="pagesList"></select>
+        </div>
+        <button id="searchBtn">Фильтровать</button>
+        <button id="clearBtn">Сбросить фильтры</button>
+    </div>
+
+    <h3>Список задач</h3>
+    <div id="todoList"></div>
+
+    <div>
+        <button class="pagination-btn" id="prevPage">Предыдущая</button>
+        <button class="pagination-btn" id="nextPage">Следующая</button>
+    </div>
+
+    <script src="./task6.js"></script>
+
+</body>
+</html>
